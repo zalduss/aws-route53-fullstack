@@ -12,10 +12,12 @@ function App() {
     const [editingTodo, setEditingTodo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [serverInfo, setServerInfo] = useState('');
 
     // Fetch all todos from the API
     useEffect(() => {
         fetchTodos();
+        getServerInfo();
     }, []);
 
     const fetchTodos = async () => {
@@ -97,10 +99,22 @@ function App() {
         }
     };
 
+
+    const getServerInfo = async () => {
+        try {
+            const response = await axios.get(`${API_URL}server/`);
+            setServerInfo(response.data.status);
+        } catch (err) {
+            console.error('Error fetching server info:', err);
+        }
+    };
+
+
     return (
         <div className="todo-app">
             <header>
                 <h1>Todo App</h1>
+                <h3>Server: {serverInfo}</h3>
             </header>
             
             <main>
@@ -129,6 +143,7 @@ function App() {
                         onToggleComplete={handleToggleComplete}
                     />
                 )}
+
             </main>
             
             <footer>
